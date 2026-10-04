@@ -11,5 +11,5 @@ def main() -> None:
     print(f"Products: {len(products)}")
     print(f"Orders: {len(orders)}")
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
