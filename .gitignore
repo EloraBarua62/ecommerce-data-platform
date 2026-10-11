@@ -1,5 +1,14 @@
+# Environment and secrets
 .env
+.env.*
+
+# Python virtual environment
 .venv/
+
+# Python generated files
 __pycache__/
-*.pyc
+*.py[cod]
+.pytest_cache/
+
+# macOS metadata
 .DS_Store
