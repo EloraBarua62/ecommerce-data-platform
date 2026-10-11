@@ -1,1 +1,13 @@
+# Environment and secrets
+.env
+.env.*
+
+# Python virtual environment
 .venv/
+
+# Python generated files
+__pycache__/
+*.py[cod]
+
+# macOS metadata
+.DS_Store
