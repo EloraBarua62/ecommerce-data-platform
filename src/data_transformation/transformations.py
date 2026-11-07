@@ -10,6 +10,36 @@ REQUIRED_COLUMNS = {
     "orders": ["order_id", "customer_id", "product_id", "quantity", "order_date"],
 }
 
+def standardize_types(data: pd.DataFrame, dataset_name: str) -> pd.DataFrame:
+    # Convert columns to expected output and validate basic data quality.
+
+    data = data.copy()
+
+    if dataset_name == "customers":
+        data["customer_id"] = data["customer_id"].astype("string")
+        data["name"] = data["name"].astype("string")
+        data["country"] = data["country"].astype("string")
+        data["signup_date"] = pd.to_datetime(data["signup_date"], errors="raise")
+
+    elif dataset_name == "products":
+        data["product_id"] = data["product_id"].astype("string")
+        data["product_name"] = data["product_name"].astype("string")
+        data["category"] = data["category"].astype("string")
+        data["price"] = pd.to_numeric(data["price"], errors="raise")
+
+    elif dataset_name == "orders":
+        data["order_id"] = data["order_id"].astype("string")
+        data["customer_id"] = data["customer_id"].astype("string")
+        data["product_id"] = data["product_id"].astype("string")
+        data["quantity"] = pd.to_numeric(data["quantity"], errors="raise").astype("int64")
+        data["order_date"] = pd.to_datetime(data["order_date"], errors="raise")
+    
+    else:
+        raise ValueError(f"Unknown dataset: {dataset_name}")
+
+    return data
+            
+
 
 def transform_data(
     bucket_name: str,
@@ -40,6 +70,8 @@ def transform_data(
             f"{sorted(missing_columns)}"
         )
 
+    data = standardize_types(data, dataset_name)
+
     rows_before = len(data)
     data = data.drop_duplicates()
     rows_removed = rows_before - len(data)
@@ -56,5 +88,5 @@ def transform_data(
     s3.head_object(Bucket=bucket_name, Key=output_key)
     print(f"Validation passed: s3://{bucket_name}/{output_key} exists")
     
-
+ 
     
